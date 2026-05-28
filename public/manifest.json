@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "ReadMi MiMo Reader",
+  "description": "使用小米 MiMo TTS 朗读网页正文或选中文本。",
+  "version": "0.1.0",
+  "permissions": ["storage", "contextMenus", "offscreen"],
+  "host_permissions": ["https://api.xiaomimimo.com/*", "<all_urls>"],
+  "background": {
+    "service_worker": "assets/background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "ReadMi",
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["assets/content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["offscreen.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

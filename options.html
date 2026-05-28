@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ReadMi 设置</title>
+  </head>
+  <body>
+    <main class="options">
+      <section class="settings-card">
+        <h1>ReadMi 设置</h1>
+        <label for="apiKey">小米 MiMo API Key</label>
+        <input id="apiKey" type="password" autocomplete="off" placeholder="输入 API Key" />
+        <div class="actions">
+          <button id="saveKey" class="primary">保存</button>
+          <button id="clearKey">清除</button>
+        </div>
+        <p id="message" role="status"></p>
+      </section>
+    </main>
+    <script type="module" src="/src/options/index.ts"></script>
+  </body>
+</html>
