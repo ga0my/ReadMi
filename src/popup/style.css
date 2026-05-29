@@ -39,9 +39,15 @@ body {
   height: 34px;
   place-items: center;
   border-radius: 8px;
-  background: #315fdc;
-  color: #fff;
-  font-weight: 700;
+  background: #000;
+  overflow: visible;
+}
+
+.logo-mark img {
+  display: block;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
 }
 
 .logo-mark.is-loading::after {

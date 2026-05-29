@@ -34,12 +34,14 @@ label {
   font-weight: 600;
 }
 
-input {
+input,
+select {
   min-height: 42px;
   padding: 0 12px;
   border: 1px solid #ccd4e1;
   border-radius: 7px;
   font: inherit;
+  background: #fff;
 }
 
 button {
@@ -61,7 +63,17 @@ button {
 
 .actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.hidden {
+  display: none;
 }
 
 #message {

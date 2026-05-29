@@ -1,6 +1,4 @@
-import { getStyle, type ReaderSettings } from "./config";
-
-const MIMO_TTS_ENDPOINT = "https://api.xiaomimimo.com/v1/chat/completions";
+import { getStyle, resolveTtsEndpoint, type ReaderSettings } from "./config";
 
 interface MimoTtsResponse {
   choices?: Array<{
@@ -44,7 +42,12 @@ export function buildTtsRequest(text: string, settings: ReaderSettings) {
 }
 
 export async function synthesizeSpeech(text: string, settings: ReaderSettings, signal?: AbortSignal): Promise<string> {
-  const response = await fetch(MIMO_TTS_ENDPOINT, {
+  const endpoint = resolveTtsEndpoint(settings);
+  if (!endpoint) {
+    throw new Error("请输入自定义 API 地址");
+  }
+
+  const response = await fetch(endpoint, {
     method: "POST",
     headers: {
       "content-type": "application/json",

@@ -9,11 +9,22 @@
     <main class="options">
       <section class="settings-card">
         <h1>ReadMi 设置</h1>
+        <label for="apiMode">API 类型</label>
+        <select id="apiMode">
+          <option value="usage">按量计费 API</option>
+          <option value="tokenPlan">Token Plan</option>
+          <option value="custom">自定义 API 地址</option>
+        </select>
+        <div id="customEndpointField" class="field hidden">
+          <label for="customEndpoint">自定义 API 地址</label>
+          <input id="customEndpoint" type="url" autocomplete="off" placeholder="https://example.com/v1/chat/completions" />
+        </div>
         <label for="apiKey">小米 MiMo API Key</label>
         <input id="apiKey" type="password" autocomplete="off" placeholder="输入 API Key" />
         <div class="actions">
           <button id="saveKey" class="primary">保存</button>
           <button id="clearKey">清除</button>
+          <button id="testApi">测试</button>
         </div>
         <p id="message" role="status"></p>
       </section>
