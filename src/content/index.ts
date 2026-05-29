@@ -1,6 +1,7 @@
 import { Readability } from "@mozilla/readability";
 import type { ContentMessage, ExtractResult } from "../shared/messages";
-import { createSegments, normalizeText, splitIntoParagraphs, type TextSegment } from "../shared/text";
+import type { TextSegment } from "../shared/text";
+import { createSegments, normalizeText, optimizeInitialSegments, sliceSegmentsFromSelectionStart, splitIntoParagraphs } from "../shared/text";
 
 const HIGHLIGHT_CLASS = "readmi-highlight";
 const STYLE_ID = "readmi-highlight-style";
@@ -44,15 +45,14 @@ function extractText(mode: "full" | "selection" | "from-selection"): ExtractResu
     return { segments };
   }
 
-  const paragraphs = extractArticleParagraphs();
+  const paragraphs = optimizeInitialSegments(extractArticleParagraphs());
   let segments = createSegments(paragraphs, "article");
 
   if (mode === "from-selection") {
     const selected = getSelectionText();
     const selectedText = selected.text;
     selectionRange = selected.range;
-    const startIndex = selectedText ? findStartSegmentIndex(segments, selectedText) : 0;
-    segments = segments.slice(startIndex);
+    segments = selectedText ? sliceSegmentsFromSelectionStart(segments, selectedText) : segments;
   }
 
   rememberSegments(segments);
@@ -89,22 +89,6 @@ function getSelectionText(): { text: string; range: Range | null } {
   const text = normalizeText(selection?.toString() ?? "");
   const range = selection && selection.rangeCount > 0 ? selection.getRangeAt(0).cloneRange() : null;
   return { text, range };
-}
-
-function findStartSegmentIndex(segments: TextSegment[], selectedText: string): number {
-  const needle = normalizeText(selectedText).slice(0, 80);
-  if (!needle) {
-    return 0;
-  }
-
-  const exactIndex = segments.findIndex((segment) => segment.text.includes(needle) || needle.includes(segment.text.slice(0, 80)));
-  if (exactIndex >= 0) {
-    return exactIndex;
-  }
-
-  const shorterNeedle = needle.slice(0, 24);
-  const looseIndex = segments.findIndex((segment) => segment.text.includes(shorterNeedle));
-  return looseIndex >= 0 ? looseIndex : 0;
 }
 
 function rememberSegments(segments: TextSegment[]) {

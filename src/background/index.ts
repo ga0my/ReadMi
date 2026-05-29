@@ -78,6 +78,18 @@ chrome.runtime.onMessage.addListener((message: RuntimeMessage, sender, sendRespo
   return true;
 });
 
+chrome.tabs.onRemoved.addListener((tabId) => {
+  if (tabId === activeTabId) {
+    void stopBecauseActiveTabUnavailable("页面已关闭，朗读已停止");
+  }
+});
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+  if (tabId === activeTabId && changeInfo.status === "loading") {
+    void stopBecauseActiveTabUnavailable("页面已更新，朗读已停止");
+  }
+});
+
 async function handleMessage(message: RuntimeMessage, senderTabId?: number) {
   try {
     if (message.type === "GET_STATE") {
@@ -244,6 +256,17 @@ async function stopCurrentTask() {
   queue = [];
   currentIndex = -1;
   activeTabId = undefined;
+}
+
+async function stopBecauseActiveTabUnavailable(message: string) {
+  await resetAudioPipeline();
+  queue = [];
+  currentIndex = -1;
+  activeTabId = undefined;
+  setState("idle", message, {
+    canResume: false,
+    currentText: undefined
+  });
 }
 
 async function setRate(rate: number) {
